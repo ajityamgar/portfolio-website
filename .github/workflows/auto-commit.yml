@@ -1,9 +1,5 @@
-name: Random Auto Commits
-
-on:
-  schedule:
-    - cron: '0 17 * * *'   # Runs daily at 10:30 PM IST (17:00 UTC)
-  workflow_dispatch:
+permissions:
+  contents: write
 
 jobs:
   commit_job:
@@ -11,21 +7,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
-      - name: Set Commit Count Based on Day
-        id: set_count
-        run: |
-          DAY=$(date +%u)
-
-          if [ "$DAY" -ge 6 ]; then
-            # Saturday / Sunday
-            COUNT=$(( RANDOM % 16 + 20 ))   # 20–35 commits
-          else
-            # Monday–Friday
-            COUNT=$(( RANDOM % 17 + 3 ))    # 3–19 commits
-          fi
-
-          echo "count=$COUNT" >> $GITHUB_OUTPUT
 
       - name: Make Random Commits
         run: |
@@ -37,4 +18,4 @@ jobs:
             git add requirement.txt
             git commit -m "Random commit $i"
           done
-          git push
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:${{ github.ref }}
