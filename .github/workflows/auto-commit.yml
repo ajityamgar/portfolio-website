@@ -1,12 +1,33 @@
+name: Random Auto Commits
+
 permissions:
   contents: write
+
+on:
+  schedule:
+    - cron: '0 17 * * *'   # Runs daily at 10:30 PM IST (17:00 UTC)
+  workflow_dispatch:
 
 jobs:
   commit_job:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Set Commit Count Based on Day
+        id: set_count
+        run: |
+          DAY=$(date +%u)
+
+          if [ "$DAY" -ge 6 ]; then
+            COUNT=$(( RANDOM % 16 + 20 ))   # 20–35 commits
+          else
+            COUNT=$(( RANDOM % 17 + 3 ))    # 3–19 commits
+          fi
+
+          echo "count=$COUNT" >> $GITHUB_OUTPUT
 
       - name: Make Random Commits
         run: |
