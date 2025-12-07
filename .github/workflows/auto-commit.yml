@@ -34,7 +34,7 @@ jobs:
             echo "$(date) - $i" >> requirement.txt
             git config --local user.email "ajityamgar855@gmail.com"
             git config --local user.name "Ajit"
-            git add update.txt
+            git add requirement.txt
             git commit -m "Random commit $i"
           done
           git push
